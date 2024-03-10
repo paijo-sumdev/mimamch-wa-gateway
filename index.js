@@ -45,4 +45,25 @@ whatsapp.onConnecting((session) => {
   console.log("connecting => ", session);
 });
 
+whatsapp.onMessageReceived(async (session) => {
+  console.log("connecting => ", session);
+
+  try {
+    const sessionId = session.sessionId;
+    const [receiver, unused] = session.key.remoteJid.split("@");
+    const text = "Ini adalah *BOT WA*\n\nPesan Anda hanya akan tersimpan, jika *urgent* hubungi kami di nomor pribadi.\n\nTerimakasih.";
+
+    if (sessionId && receiver && !session.key.fromMe) {
+      const send = await whatsapp.sendTextMessage({
+        sessionId,
+        to: receiver,
+        isGroup: false,
+        text,
+      });  
+    }
+  } catch (err) {
+    console.log("error => ", err);
+  }
+})
+
 whatsapp.loadSessionsFromStorage();
