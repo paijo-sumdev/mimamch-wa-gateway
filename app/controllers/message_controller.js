@@ -2,6 +2,9 @@ const whatsapp = require("wa-multi-session");
 const ValidationError = require("../../utils/error");
 const { responseSuccessWithData } = require("../../utils/response");
 const logger = require("../../utils/logger");
+const WhatsappDB = require("../../database/model/whatsapp");
+const { DateTime } = require("luxon");
+const { v4: uuidv4 } = require("uuid");
 
 exports.sendMessage = async (req, res, next) => {
   try {
@@ -21,6 +24,18 @@ exports.sendMessage = async (req, res, next) => {
       isGroup: !!isGroup,
       text,
     });
+
+    const dataToSave = {
+      metadata:{
+        timeInsert: Math.floor(Date.now() / 1000),
+      },
+      uuid: uuidv4(),
+      actualTime: DateTime.local().toISO(),
+      destination: receiver,
+      message: text,
+    }
+    const saveData = new WhatsappDB(dataToSave);
+    await saveData.save();
 
     logger({ activity: "sending-whatsapp" }, `send data ` + JSON.stringify(send));
 
