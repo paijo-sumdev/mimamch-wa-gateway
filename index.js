@@ -9,9 +9,11 @@ const MainRouter = require("./app/routers");
 const errorHandlerMiddleware = require("./app/middlewares/error_middleware");
 const whatsapp = require("wa-multi-session");
 const logger = require("./utils/logger");
+const connectDB = require("./database/index");
 const { v4: uuidv4 } = require("uuid");
 
 config();
+connectDB({});
 
 var app = express();
 app.use(morgan("dev"));
