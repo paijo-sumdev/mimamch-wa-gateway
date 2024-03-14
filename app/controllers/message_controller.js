@@ -1,6 +1,7 @@
 const whatsapp = require("wa-multi-session");
 const ValidationError = require("../../utils/error");
 const { responseSuccessWithData } = require("../../utils/response");
+const logger = require("../../utils/logger");
 
 exports.sendMessage = async (req, res, next) => {
   try {
@@ -20,6 +21,8 @@ exports.sendMessage = async (req, res, next) => {
       isGroup: !!isGroup,
       text,
     });
+
+    logger({ activity: "sending-whatsapp" }, `send data ` + JSON.stringify(send));
 
     res.status(200).json(
       responseSuccessWithData({
